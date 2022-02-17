@@ -4,8 +4,12 @@ const port = process.env.PORT
 
 app.use(express.static('public'))
 
-const people = []
+const people = {}
 const cbs = []
+
+function event() {
+  for (const cb of cbs) cb()
+}
 
 app.get('/e', async function(req, res) {
   res.set({
@@ -15,27 +19,43 @@ app.get('/e', async function(req, res) {
   });
   res.flushHeaders();
 
-  let {name = "Guest"} = req.query
+  let {name = "Guest", id} = req.query
+  if (!id) {
+    res.end();
+    return
+  }
+  
   if (name.length === 0) name = "Guest"
   
-  const idx = people.length
   const cbsidx = cbs.length
-  people.push(name)
+  people[id] = name
   
   cbs.push(() => {
-    res.write(`data: ${JSON.stringify({type: 'people', people})}\n\n`)
+    res.write(`data: ${JSON.stringify({type: 'people', people: Object.values(people)})}\n\n`)
   })
   
   req.on('close', () => {
-    people.pop(idx)
+    delete people[id]
     cbs.pop(cbsidx)
-    for (const cb of cbs) cb()
+    event()
   })
-  
-  for (const cb of cbs) cb()
+
+  event()
   
   res.write('retry: 1000\n\n');
 });
+
+app.post('/name', function(req, res) {
+  console.log(req)
+  const {name = "Guest", id} = req.body
+  if (!id || !people[id]) {
+    res.end();
+    return;
+  }
+  
+  people[id] = name;
+  event()
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

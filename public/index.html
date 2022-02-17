@@ -98,7 +98,7 @@
           </h2>
           <label>
             Name: 
-            <input v-model="name" class="text-black" v-effect="update(name)" />          
+            <input v-model="name" class="text-black" v-effect="nameUpdate(name)" />          
           </label>
         </div>
 
@@ -125,10 +125,12 @@
     </div>
     
     <script type="module">
+      import { nanoid } from "https://unpkg.com/nanoid@3.3.1/index.browser.js"
       import { formatDistanceToNow, format } from 'https://cdn.skypack.dev/date-fns';
       import { createApp } from 'https://unpkg.com/petite-vue?module';
 
       const HOUR = 17;
+      const ID = nanoid();
 
       const pm = () => {
         const d = new Date();
@@ -145,18 +147,9 @@
         profile: false,
         is5pm: new Date().getHours() === HOUR,
         relative5pm: formatDistanceToNow(pm()),
-        es: null,
         
-        update(_name) {
-          this.es?.close();
-          this.es = new EventSource(`/e?name=${this.name}`);
-
-          this.es.addEventListener('message', message => {
-            console.log('Got', message);
-            const data = JSON.parse(message.data)
-            if (data.type === 'people')
-              this.people = data.people
-          });          
+        nameUpdate(_name) {
+          fetch("/name", {method: "POST", body: JSON.stringify({name, id: ID})})
         },
                 
         mounted() {
@@ -168,7 +161,14 @@
           update()
           setInterval(update, 1000);
           
-          this.update()
+          const source = new EventSource(`/e?name=${this.name}&id=${ID}`);
+
+          source.addEventListener('message', message => {
+            console.log('Got', message);
+            const data = JSON.parse(message.data)
+            if (data.type === 'people')
+              this.people = data.people
+          });          
         },
         unmounted() {
           clearInterval(update);
