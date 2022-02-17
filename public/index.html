@@ -87,6 +87,10 @@
         </span>
       </div>
       
+      <label>
+        WHo???
+        <input v-model="name" class="m-3" />
+      </label>
       <span class="ml-3">Watching together with you uwu:</span>
       <div class="p-3 grid grid-cols-3">
         <span v-for="person in people">
@@ -108,23 +112,27 @@
         return d
       }
 
-      const f = (d) => format(d, 'HH:mm:ss');
-
       createApp({
         relative5pm: formatDistanceToNow(pm()),
-        is5pm: new Date().getHours() === HOUR,
-        now: f(new Date()),
+        is5pm: "",
+        now: "",
         people: [],
         mounted() {
-          const name = prompt("WHo???") ?? ""
-          const update = () => (this.now = f(new Date()));
+          const update = () => {
+            this.now = format(new Date(), 'HH:mm:ss');
+            this.is5pm = new Date().getHours() === HOUR
+          }
+          
+          update()
           setInterval(update, 1000);
           
           const source = new EventSource(`/e?name=${name}`);
 
           source.addEventListener('message', message => {
             console.log('Got', message);
-            this.people = JSON.parse(message.data)
+            const data = JSON.parse(message.data)
+            if (data.type === 'people')
+              this.people = data.people
           });
         },
         unmounted() {

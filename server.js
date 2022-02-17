@@ -23,7 +23,7 @@ app.get('/e', async function(req, res) {
   people.push(name)
   
   cbs.push(() => {
-    res.write(`data: ${JSON.stringify(people)}\n\n`)
+    res.write(`data: ${JSON.stringify({type: 'people', people})}\n\n`)
   })
   
   req.on('close', () => {
