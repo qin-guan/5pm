@@ -42,6 +42,18 @@ function chatEvent(message, id) {
   }
 }
 
+function voteEvent() {
+  for (const res of reslist) {
+    if (res.writableEnded) continue;
+    res.write(
+      `data: ${JSON.stringify({
+        type: "vote",
+        votes
+      })}\n\n`
+    );
+  }
+}
+
 app.get("/e", async function (req, res) {
   res.set({
     "Cache-Control": "no-cache",
@@ -87,12 +99,24 @@ app.post("/name", function (req, res) {
 
 app.post("/vote", function (req, res) {
   const {vote} = req.body
-  if (!vote) {
+  if (!vote || vote < 1 || vote > 24) {
     res.end()
     return
   }
   
+  const idx = votes.findIndex(v => v.hour === vote)
+  if (idx === -1) {
+    votes.push({
+      hour: vote,
+      votes: 1
+    })
+  } else {
+    votes[idx].votes++    
+  }
   
+  voteEvent();
+  
+  res.end()
 });
 
 app.get("/chat", function (req, res) {
