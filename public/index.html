@@ -93,22 +93,33 @@
         </span>
 
         <div class="flex justify-center mt-3">
-          <div v-for="vote in votes" class="p-1 rounded-lg bg-slate-600 grid grid-cols-2 gap-2 hover:scale-105 duration-100 cursor-pointer">
-            <kbd>
-              {{ vote.hour % 12 }}PM
-            </kbd>
-            <div class="bg-slate-800 rounded-lg">
-               {{ vote.votes }}
-            </div>
+          <div
+            v-for="vote in votes"
+            class="p-1 rounded-lg bg-slate-600 grid grid-cols-2 gap-2 hover:scale-105 duration-100 cursor-pointer"
+          >
+            <kbd> {{ vote.hour % 12 }}PM </kbd>
+            <div class="bg-slate-800 rounded-lg">{{ vote.votes }}</div>
           </div>
-          
-          <div @click="vote = '5'" v-if="vote.length === 0" class="p-1 px-2 ml-3 rounded-lg bg-slate-600 hover:scale-105 duration-100 cursor-pointer">
+
+          <div
+            v-if="vote === 0"
+            @click="vote = 5"
+            class="p-1 px-2 ml-3 rounded-lg bg-slate-600 hover:scale-105 duration-100 cursor-pointer"
+          >
             <kbd class="text-center">+</kbd>
           </div>
-          
-          <div v-else>
-            
-            
+
+          <div v-else class="p-1 px-2 ml-3 rounded-lg bg-slate-600">
+            <form @submit.prevent="submitVote">
+              <input
+                v-model="vote"
+                class="bg-transparent w-10"
+                type="number"
+                min="1"
+                max="24"
+              />
+              <input type="submit" />
+            </form>
           </div>
         </div>
       </div>
@@ -189,7 +200,7 @@
         messages: [],
         is5pm: false,
         votes: [],
-        vote: "",
+        vote: 0,
         message: "",
         chat: false,
         name: "Guest",
@@ -233,6 +244,15 @@
             body: JSON.stringify({ message: this.message, id: ID }),
           });
           this.message = "";
+        },
+        
+        submitVote() {
+          fetch("/vote", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ vote })
+          })
+          this.vote = 0
         },
 
         mounted() {
