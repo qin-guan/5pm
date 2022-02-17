@@ -4,15 +4,20 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Vite App</title>
   </head>
   <body>
-    <div id="app" v-scope @vue:mounted="mounted" @vue:unmounted="unmounted">
+    <div id="app" v-scope @vue:mounted="mounted" @vue:unmounted="unmounted" class="bg-slate-900 flex flex-col align-center justify-center w-screen h-screen text-white">
       <h1>{{ is5pm ? "Yes" : "No" }}</h1>
       <span v-if="!is5pm">
         {{ relative5pm }}
         <br />
         Now: {{ now }}
+      </span>
+      
+      <span v-for="person in people">
+        {{ person }}
       </span>
     </div>
     <script type="module">
@@ -33,6 +38,7 @@
         relative5pm: `${formatDistance(pm(), new Date())} till 5pm`,
         is5pm: new Date().getHours() === HOUR,
         now: f(new Date()),
+        people: [],
         mounted() {
           const update = () => (this.now = f(new Date()));
           setInterval(update, 1000);
@@ -41,6 +47,7 @@
 
           source.addEventListener('message', message => {
             console.log('Got', message);
+            this.people = JSON.parse(message.data)
           });
         },
         unmounted() {
