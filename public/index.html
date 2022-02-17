@@ -87,17 +87,19 @@
         </span>
       </div>
       
-      <div class="fixed bottom-0 left-0 w-screen bg-slate-800 rounded-tl-lg rounded-tr-lg overflow-hidden">
+      <div class="fixed bottom-0 left-0 w-screen bg-slate-800 rounded-tl-lg rounded-tr-lg overflow-x-hidden">
         <div v-if="chat" class="mb-4 p-4" @vue:mounted="getMessages">
           <h2 class="text-xl mb-2">
             Chat
           </h2>
-                    
-          <div v-for="m in messages">
-            <strong>
-              {{ m.person }}:
-            </strong>
-            <span>{{ m.message }}</span>
+          
+          <div class="overflow-y-scroll" style="max-height: 30vh;">
+            <div v-for="m in messages" ref="chatContainer">
+              <strong>
+                {{ m.person }}:
+              </strong>
+              <span>{{ m.message }}</span>
+            </div>
           </div>
           
           <form @submit.prevent="sendMessage" class="text-black flex justify-between">
@@ -169,8 +171,9 @@
         },
         
         getMessages() {
-          JSON.parse(await (await fetch("/chat", {method: "GET"})).json())
-          console.log(this.messages)
+          fetch("/chat", {method: "GET"}).then(v => v.json()).then(data => {
+            this.messages = data
+          })
         },
         
         async sendMessage() {
@@ -192,8 +195,11 @@
             const data = JSON.parse(message.data)
             if (data.type === 'people')
               this.people = data.people
-            else if (data.type === "chat")
+            else if (data.type === "chat") {
               this.messages.push({message: data.message, person: data.person})
+              console.log(this.$refs)
+              this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight;
+            }
           });
         },
         unmounted() {
