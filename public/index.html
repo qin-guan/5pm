@@ -8,20 +8,95 @@
     <title>Vite App</title>
   </head>
   <body>
-    <div id="app" v-scope @vue:mounted="mounted" @vue:unmounted="unmounted" class="bg-slate-900 flex flex-col align-center justify-center w-screen h-screen text-white">
-      <h1>{{ is5pm ? "Yes" : "No" }}</h1>
-      <span v-if="!is5pm">
-        {{ relative5pm }}
-        <br />
-        Now: {{ now }}
-      </span>
+    <style>
+      body {
+        font-family: 'Comis Sans MS', cursive;
+      }
       
-      <span v-for="person in people">
-        {{ person }}
-      </span>
+      h1 {
+        font-family: 'Comic Sans MS', cursive;
+        font-size: 100px;
+        animation: rainbow-glow 5s infinite, rainbow-pastel 5s infinite;
+        display: block;
+        flex: 0 1 auto;
+        text-align: center;
+      }
+      
+      @keyframes rainbow-glow {
+        0% {
+            text-shadow: 0 0 40px red;
+        }
+        15% {
+            text-shadow: 0 0 40px orange;
+        }
+        30% {
+            text-shadow: 0 0 40px yellow;
+        }
+        45% {
+            text-shadow: 0 0 40px lime;
+        }
+        60% {
+            text-shadow: 0 0 40px blue;
+        }
+        75% {
+            text-shadow: 0 0 40px rgb(149, 0, 255);
+        }
+        90% {
+            text-shadow: 0 0 40px rgb(255, 0, 255);
+        }
+        100% {
+            text-shadow: 0 0 40px red;
+        }
+    }
+
+    @keyframes rainbow-pastel {
+        0% {
+            color: rgb(255, 136, 136);
+        }
+        15% {
+            color: rgb(255, 208, 121);
+        }
+        30% {
+            color: rgb(255, 255, 117);
+        }
+        45% {
+            color: rgb(116, 255, 116);
+        }
+        60% {
+            color: rgb(97, 97, 255);
+        }
+        75% {
+            color: rgb(198, 117, 255);
+        }
+        90% {
+            color: rgb(255, 123, 255);
+        }
+        100% {
+            color: rgb(255, 137, 137);
+        }
+    }
+    </style>
+    
+    <div id="app" v-scope @vue:mounted="mounted" @vue:unmounted="unmounted" class="bg-black flex flex-col w-screen h-screen text-white">
+      <div class="flex flex-col flex-1 align-center justify-center text-center">
+        <h1>{{ is5pm ? "Yes" : "No" }}</h1>
+        <span v-if="!is5pm">
+          {{ relative5pm }} to 5pm
+          <br />
+          {{ now }}
+        </span>
+      </div>
+      
+      <span class="ml-3">Watching together with you uwu:</span>
+      <div class="p-3 grid grid-cols-3">
+        <span v-for="person in people">
+          {{ person }}
+        </span>  
+      </div>
     </div>
+    
     <script type="module">
-      import { formatDistance, format } from 'https://cdn.skypack.dev/date-fns';
+      import { formatDistanceToNow, format } from 'https://cdn.skypack.dev/date-fns';
       import { createApp } from 'https://unpkg.com/petite-vue?module';
 
       const HOUR = 17;
@@ -32,18 +107,19 @@
         return d
       }
 
-      const f = (d) => format(d, 'mm:HH:ss');
+      const f = (d) => format(d, 'HH:mm:ss');
 
       createApp({
-        relative5pm: `${formatDistance(pm(), new Date())} till 5pm`,
+        relative5pm: formatDistanceToNow(pm()),
         is5pm: new Date().getHours() === HOUR,
         now: f(new Date()),
         people: [],
         mounted() {
+          const name = prompt("WHo???")
           const update = () => (this.now = f(new Date()));
           setInterval(update, 1000);
           
-          const source = new EventSource('/e');
+          const source = new EventSource(`/e?name=${name}`);
 
           source.addEventListener('message', message => {
             console.log('Got', message);

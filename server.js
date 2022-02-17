@@ -27,6 +27,7 @@ app.get('/e', async function(req, res) {
   req.on('close', () => {
     people.pop(idx)
     cbs.pop(cbsidx)
+    for (const cb of cbs) cb()
   })
   
   for (const cb of cbs) cb()
