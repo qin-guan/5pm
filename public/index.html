@@ -10,74 +10,80 @@
   <body>
     <style>
       body {
-        font-family: 'Comis Sans MS', cursive;
+        font-family: "Comis Sans MS", cursive;
       }
-      
+
       h1 {
-        font-family: 'Comic Sans MS', cursive;
+        font-family: "Comic Sans MS", cursive;
         font-size: 100px;
         animation: rainbow-glow 5s infinite, rainbow-pastel 5s infinite;
         display: block;
         flex: 0 1 auto;
         text-align: center;
       }
-      
+
       @keyframes rainbow-glow {
         0% {
-            text-shadow: 0 0 40px red;
+          text-shadow: 0 0 40px red;
         }
         15% {
-            text-shadow: 0 0 40px orange;
+          text-shadow: 0 0 40px orange;
         }
         30% {
-            text-shadow: 0 0 40px yellow;
+          text-shadow: 0 0 40px yellow;
         }
         45% {
-            text-shadow: 0 0 40px lime;
+          text-shadow: 0 0 40px lime;
         }
         60% {
-            text-shadow: 0 0 40px blue;
+          text-shadow: 0 0 40px blue;
         }
         75% {
-            text-shadow: 0 0 40px rgb(149, 0, 255);
+          text-shadow: 0 0 40px rgb(149, 0, 255);
         }
         90% {
-            text-shadow: 0 0 40px rgb(255, 0, 255);
+          text-shadow: 0 0 40px rgb(255, 0, 255);
         }
         100% {
-            text-shadow: 0 0 40px red;
+          text-shadow: 0 0 40px red;
         }
-    }
+      }
 
-    @keyframes rainbow-pastel {
+      @keyframes rainbow-pastel {
         0% {
-            color: rgb(255, 136, 136);
+          color: rgb(255, 136, 136);
         }
         15% {
-            color: rgb(255, 208, 121);
+          color: rgb(255, 208, 121);
         }
         30% {
-            color: rgb(255, 255, 117);
+          color: rgb(255, 255, 117);
         }
         45% {
-            color: rgb(116, 255, 116);
+          color: rgb(116, 255, 116);
         }
         60% {
-            color: rgb(97, 97, 255);
+          color: rgb(97, 97, 255);
         }
         75% {
-            color: rgb(198, 117, 255);
+          color: rgb(198, 117, 255);
         }
         90% {
-            color: rgb(255, 123, 255);
+          color: rgb(255, 123, 255);
         }
         100% {
-            color: rgb(255, 137, 137);
+          color: rgb(255, 137, 137);
         }
-    }
+      }
     </style>
-    
-    <div id="app" v-scope @vue:mounted="mounted" @vue:unmounted="unmounted" class="bg-black flex flex-col w-screen h-screen text-white">
+
+    <div
+      id="app"
+      v-scope
+      @vue:mounted="mounted"
+      @vue:unmounted="unmounted"
+      class="bg-black flex flex-col w-screen h-screen text-white"
+    >
       <div class="flex flex-col flex-1 align-center justify-center text-center">
         <h1>{{ is5pm ? "Yes" : "No" }}</h1>
         <span v-if="!is5pm">
@@ -86,52 +92,59 @@
           {{ now }}
         </span>
       </div>
-      
-      <div class="fixed bottom-0 left-0 w-screen bg-slate-800 rounded-tl-lg rounded-tr-lg overflow-x-hidden">
+
+      <div
+        class="fixed bottom-0 left-0 w-screen bg-slate-800 rounded-tl-lg rounded-tr-lg overflow-x-hidden"
+      >
         <div v-if="chat" class="p-4" @vue:mounted="getMessages">
-          <h2 class="text-xl mb-2">
-            Chat
-          </h2>
-          
-          <div class="overflow-y-scroll" style="max-height: 30vh;" id="c">
+          <h2 class="text-xl mb-2">Chat</h2>
+
+          <div class="overflow-y-scroll" style="max-height: 30vh" id="c">
             <div v-for="m in messages">
-              <strong>
-                {{ m.person }}:
-              </strong>
+              <strong> {{ m.person }}: </strong>
               <span>{{ m.message }}</span>
             </div>
           </div>
-          
-          <form @submit.prevent="sendMessage" class="text-black flex justify-between items-center pt-3">
-            <input v-model="message" />            
+
+          <form
+            @submit.prevent="sendMessage"
+            class="text-black flex justify-between items-center pt-3"
+          >
+            <input v-model="message" />
             <input type="submit" class="bg-indigo-200 px-4 py-2 rounded-lg" />
           </form>
         </div>
 
         <div v-if="profile" class="mb-4 bg-slate-600 p-4">
-          <h2 class="text-xl mb-2">
-            Profile
-          </h2>
+          <h2 class="text-xl mb-2">Profile</h2>
           <label>
-            Name: 
-            <input v-model="name" class="text-black" v-effect="nameUpdate(name)" />          
+            Name:
+            <input
+              v-model="name"
+              class="text-black"
+              v-effect="nameUpdate(name)"
+            />
           </label>
         </div>
 
         <div class="p-4">
           <span>Watching together with you uwu:</span>
           <div class="flex">
-            <div class="grid grid-cols-3 gap-3" style="flex: 1;">
-              <span v-for="person in people">
-                {{ person }}
-              </span>  
+            <div class="grid grid-cols-3 gap-3" style="flex: 1">
+              <span v-for="person in people"> {{ person }} </span>
             </div>
 
-            <div style="flex: 0.5;" class="flex justify-end text-black">
-              <button class="bg-slate-200 px-4 py-2 rounded-lg" @click="chat = !chat">
+            <div style="flex: 0.5" class="flex justify-end text-black">
+              <button
+                class="bg-slate-200 px-4 py-2 rounded-lg"
+                @click="chat = !chat"
+              >
                 Chat
               </button>
-              <button class="bg-slate-200 px-4 py-2 rounded-lg ml-4" @click="profile = !profile">
+              <button
+                class="bg-slate-200 px-4 py-2 rounded-lg ml-4"
+                @click="profile = !profile"
+              >
                 Profile
               </button>
             </div>
@@ -139,74 +152,94 @@
         </div>
       </div>
     </div>
-    
+
     <script type="module">
-      import { nanoid } from "https://unpkg.com/nanoid@3.3.1/index.browser.js"
-      import { formatDistanceToNow, format } from 'https://cdn.skypack.dev/date-fns';
-      import { createApp } from 'https://unpkg.com/petite-vue?module';
+      import { nanoid } from "https://unpkg.com/nanoid@3.3.1/index.browser.js";
+      import {
+        formatDistanceToNow,
+        format,
+      } from "https://cdn.skypack.dev/date-fns";
+      import { createApp } from "https://unpkg.com/petite-vue?module";
 
       const HOUR = 17;
       const ID = nanoid();
 
       const pm = () => {
         const d = new Date();
-        if (d.getHours() > HOUR) d.setDate(d.getDate() + 1)
+        if (d.getHours() > HOUR) d.setDate(d.getDate() + 1);
         d.setHours(HOUR);
-        return d
-      }
+        return d;
+      };
 
       createApp({
         now: "",
         people: [],
         messages: [],
+        votes: {5: 1},
         message: "",
         chat: false,
         name: "Guest",
         profile: false,
         is5pm: new Date().getHours() === HOUR,
         relative5pm: formatDistanceToNow(pm()),
-        
+
         nameUpdate(name) {
-          fetch("/name", {method: "POST", headers: {"content-type": "application/json"}, body: JSON.stringify({name, id: ID})})
+          fetch("/name", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ name, id: ID }),
+          });
         },
-        
+
         getMessages() {
-          fetch("/chat", {method: "GET"}).then(v => v.json()).then(data => {
-            this.messages = data
-            setTimeout(() => {
-              const objDiv = document.getElementById("c")
-              objDiv.scrollTop = objDiv.scrollHeight;
-            }, 50)
-          })
+          fetch("/chat", { method: "GET" })
+            .then((v) => v.json())
+            .then((data) => {
+              this.messages = data;
+              setTimeout(() => {
+                const objDiv = document.getElementById("c");
+                objDiv.scrollTop = objDiv.scrollHeight;
+              }, 50);
+            });
         },
-        
-        async sendMessage() {
-          fetch("/chat", {method: "POST", headers: {"content-type": "application/json"}, body: JSON.stringify({message: this.message, id: ID})})
-          this.message = ""
+
+        sendMessage() {
+          fetch("/chat", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ message: this.message, id: ID }),
+          });
+          this.message = "";
         },
-                
-        async mounted() {
+
+        mounted() {
           const update = () => {
-            this.now = format(new Date(), 'HH:mm:ss');
-            this.is5pm = new Date().getHours() === HOUR
-          }
-          
-          update()
+            this.now = format(new Date(), "HH:mm:ss");
+            this.is5pm = new Date().getHours() === HOUR;
+          };
+
+          update();
           setInterval(update, 1000);
           
+          fetch("/votes", {method:"GET"}).then(v => v.json()).then(data => {
+            this.votes = data
+          })
+
           const source = new EventSource(`/e?name=${this.name}&id=${ID}`);
 
-          source.addEventListener('message', message => {
-            const data = JSON.parse(message.data)
-            if (data.type === 'people')
-              this.people = data.people
+          source.addEventListener("message", (message) => {
+            const data = JSON.parse(message.data);
+            if (data.type === "people") this.people = data.people;
             else if (data.type === "chat") {
-              this.messages.push({message: data.message, person: data.person})
-              
+              this.messages.push({
+                message: data.message,
+                person: data.person,
+              });
+
               setTimeout(() => {
-                const objDiv = document.getElementById("c")
+                const objDiv = document.getElementById("c");
                 objDiv.scrollTop = objDiv.scrollHeight;
-              }, 50)
+              }, 50);
             }
           });
         },

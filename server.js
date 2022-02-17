@@ -10,6 +10,9 @@ app.use(bodyParser.json())
 const people = {}
 const reslist = []
 const messages = []
+const votes = [{
+  5: 1
+}]
 
 function event() {
   for (const res of reslist) {
@@ -72,6 +75,10 @@ app.get('/chat', function(req, res) {
   res.send(
     JSON.stringify(messages.map(m => ({message: m.message, person: people[m.id] || "Guest"})))
   )
+})
+
+app.get("/votes", function(req, res) {
+  res.send(JSON.stringify(votes))
 })
 
 app.post('/chat', function(req, res) {
