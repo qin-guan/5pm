@@ -8,7 +8,7 @@ app.use(express.static('public'))
 app.use(bodyParser.json())
 
 const people = {}
-const cbs = []
+const reslist = []
 
 function event() {
   for (const cb of cbs) cb()
@@ -55,7 +55,7 @@ app.post('/name', function(req, res) {
     return;
   }
   
-  people[id] = name;
+  people[id] = name.length === 0 ? "Guest" : name;
   event()
 })
 
