@@ -87,12 +87,37 @@
         </span>
       </div>
       
-      <div class="p-3">
+      <div class="absolute bottom-0 left-0 w-screen bg-slate-800 rounded-tl-lg rounded-tr-lg p-4">
+        <div v-if="chat" class="mb-4">
+          chat
+        </div>
+
+        <div v-if="profile" class="mb-4">
+          <h2>
+            Profile
+          </h2>
+          <label>
+            Name: 
+            <input v-model="name" class="text-black" />          
+          </label>
+        </div>
+
         <span>Watching together with you uwu:</span>
-        <div class="grid grid-cols-3">
-          <span v-for="person in people">
-            {{ person }}
-          </span>  
+        <div class="flex">
+          <div class="grid grid-cols-3 gap-3" style="flex: 1;">
+            <span v-for="person in people">
+              {{ person }}
+            </span>  
+          </div>
+
+          <div style="flex: 0.5;" class="flex justify-end text-black">
+            <button class="bg-slate-200 px-4 py-2 rounded-lg" @click="chat = !chat">
+              Chat
+            </button>
+            <button class="bg-slate-200 px-4 py-2 rounded-lg ml-4" @click="profile = !profile">
+              Profile
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -112,11 +137,13 @@
 
       createApp({
         now: "",
+        chat: false,
         people: [],
+        profile: false,
         is5pm: new Date().getHours() === HOUR,
         relative5pm: formatDistanceToNow(pm()),
                 
-        mounted() {
+        async mounted() {
           const update = () => {
             this.now = format(new Date(), 'HH:mm:ss');
             this.is5pm = new Date().getHours() === HOUR
