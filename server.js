@@ -11,7 +11,7 @@ const people = {}
 const reslist = []
 const messages = []
 const votes = [{
-  hour: 5,
+  hour: 17,
   votes: 1
 }]
 

@@ -87,14 +87,12 @@
       <div class="flex flex-col flex-1 align-center justify-center text-center">
         <h1>{{ is5pm ? "Yes" : "No" }}</h1>
         <span v-if="!is5pm">
-          {{ relative5pm }} to {{ hour() }}pm
+          {{ relativepm() }}
           <br />
           {{ now }}
         </span>
-        
-        <span>
-          {{ votes }}
-        </span>
+
+        <span> {{ votes }} </span>
       </div>
 
       <div
@@ -171,30 +169,24 @@
         now: "",
         people: [],
         messages: [],
+        is5pm: false,
         votes: [],
         message: "",
         chat: false,
         name: "Guest",
         profile: false,
-        
-        hour() {
-          let top = 0
-          for (const item of this.votes) {
-            if (item.votes > top) top = item.hour
-          }
-          return top
-        },
-        
-        pm() {
+        hour: 17,
+
+        relativepm() {
           const d = new Date();
-          if (d.getHours() > this.hour()) d.setDate(d.getDate() + 1);
-          d.setHours(this.hour());
-          return d;
+          if (d.getHours() > this.hour) d.setDate(d.getDate() + 1);
+          d.setHours(this.hour);
+
+          return `${formatDistanceToNow(d)} to ${this.hour % 12}${
+            this.hour > 12 ? "PM" : "AM"
+          }`;
         },
 
-        relative5pm: formatDistanceToNow(this.pm()),
-        is5pm: new Date().getHours() === this.hour(),
-        
         nameUpdate(name) {
           fetch("/name", {
             method: "POST",
@@ -227,15 +219,22 @@
         mounted() {
           const update = () => {
             this.now = format(new Date(), "HH:mm:ss");
-            this.is5pm = new Date().getHours() === this.hour();
+            this.is5pm = new Date().getHours() === this.hour;
           };
 
           update();
           setInterval(update, 1000);
-          
-          fetch("/votes", {method:"GET"}).then(v => v.json()).then(data => {
-            this.votes = data
-          })
+
+          fetch("/votes", { method: "GET" })
+            .then((v) => v.json())
+            .then((data) => {
+              this.votes = data;
+              let top = 0;
+              for (const item of this.votes) {
+                if (item.votes > top) top = item.hour;
+              }
+              this.hour = top;
+            });
 
           const source = new EventSource(`/e?name=${this.name}&id=${ID}`);
 
