@@ -69,7 +69,9 @@ app.post('/name', function(req, res) {
 })
 
 app.get('/chat', function(req, res) {
-  res.send(JSON.stringify(messages))
+  res.send(
+    JSON.stringify(messages.map(m => ({message: m.message, person: people[m.id]})))
+  )
 })
 
 app.post('/chat', function(req, res) {
@@ -81,6 +83,7 @@ app.post('/chat', function(req, res) {
   
   messages.push({message, id})
   chatEvent(message, id)
+  res.end()
 })
 
 app.listen(port, () => {
