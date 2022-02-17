@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+  </head>
+  <body>
+    <div id="app" v-scope @vue:mounted="mounted" @vue:unmounted="unmounted">
+      <h1>{{ is5pm ? "Yes" : "No" }}</h1>
+      <span v-if="!is5pm">
+        {{ relative5pm }}
+        <br />
+        Now: {{ now }}
+      </span>
+    </div>
+    <script type="module">
+      import { formatDistance, format } from 'https://cdn.skypack.dev/date-fns';
+      import { createApp } from 'https://unpkg.com/petite-vue?module';
+
+      const HOUR = 18;
+
+      const pm = new Date();
+      pm.setHours(HOUR);
+
+      const f = (d) => format(d, 'mm:HH:ss');
+
+      createApp({
+        relative5pm: `${formatDistance(new Date(), pm)} till 5pm`,
+        is5pm: new Date().getHours() === HOUR,
+        now: f(new Date()),
+        mounted() {
+          const update = () => (this.now = f(new Date()));
+          setInterval(update, 1000);
+
+          localConnection = new RTCPeerConnection();
+
+          sendChannel = localConnection.createDataChannel('sendChannel');
+          sendChannel.onopen = handleSendChannelStatusChange;
+          sendChannel.onclose = handleSendChannelStatusChange;
+
+          
+        },
+        unmounted() {
+          clearInterval(update);
+        },
+      }).mount();
+    </script>
+  </body>
+</html>
