@@ -11,7 +11,8 @@ const people = {}
 const reslist = []
 const messages = []
 const votes = [{
-  5: 1
+  hour: 5,
+  votes: 1
 }]
 
 function event() {

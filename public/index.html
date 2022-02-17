@@ -87,9 +87,13 @@
       <div class="flex flex-col flex-1 align-center justify-center text-center">
         <h1>{{ is5pm ? "Yes" : "No" }}</h1>
         <span v-if="!is5pm">
-          {{ relative5pm }} to 5pm
+          {{ relative5pm }} to {{ hour() }}pm
           <br />
           {{ now }}
+        </span>
+        
+        <span>
+          {{ votes }}
         </span>
       </div>
 
@@ -101,7 +105,7 @@
 
           <div class="overflow-y-scroll" style="max-height: 30vh" id="c">
             <div v-for="m in messages">
-              <strong> {{ m.person }}: </strong>
+              <strong>{{ m.person }}: </strong>
               <span>{{ m.message }}</span>
             </div>
           </div>
@@ -161,28 +165,36 @@
       } from "https://cdn.skypack.dev/date-fns";
       import { createApp } from "https://unpkg.com/petite-vue?module";
 
-      const HOUR = 17;
       const ID = nanoid();
-
-      const pm = () => {
-        const d = new Date();
-        if (d.getHours() > HOUR) d.setDate(d.getDate() + 1);
-        d.setHours(HOUR);
-        return d;
-      };
 
       createApp({
         now: "",
         people: [],
         messages: [],
-        votes: {5: 1},
+        votes: [],
         message: "",
         chat: false,
         name: "Guest",
         profile: false,
-        is5pm: new Date().getHours() === HOUR,
-        relative5pm: formatDistanceToNow(pm()),
+        
+        hour() {
+          let top = 0
+          for (const item of this.votes) {
+            if (item.votes > top) top = item.hour
+          }
+          return top
+        },
+        
+        pm() {
+          const d = new Date();
+          if (d.getHours() > this.hour()) d.setDate(d.getDate() + 1);
+          d.setHours(this.hour());
+          return d;
+        },
 
+        relative5pm: formatDistanceToNow(this.pm()),
+        is5pm: new Date().getHours() === this.hour(),
+        
         nameUpdate(name) {
           fetch("/name", {
             method: "POST",
@@ -215,7 +227,7 @@
         mounted() {
           const update = () => {
             this.now = format(new Date(), "HH:mm:ss");
-            this.is5pm = new Date().getHours() === HOUR;
+            this.is5pm = new Date().getHours() === this.hour();
           };
 
           update();
