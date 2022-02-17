@@ -15,7 +15,9 @@ app.get('/e', async function(req, res) {
   });
   res.flushHeaders();
 
-  const {name = "Guest"} = req.query
+  let {name = "Guest"} = req.query
+  if (name.length === 0) name = "Guest"
+  
   const idx = people.length
   const cbsidx = cbs.length
   people.push(name)

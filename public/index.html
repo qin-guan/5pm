@@ -5,7 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Vite App</title>
+    <title>6pm</title>
   </head>
   <body>
     <style>
@@ -103,6 +103,7 @@
 
       const pm = () => {
         const d = new Date();
+        if (d.getHours() > HOUR) d.setDate(d.getDate() + 1)
         d.setHours(HOUR);
         return d
       }
@@ -114,8 +115,9 @@
         is5pm: new Date().getHours() === HOUR,
         now: f(new Date()),
         people: [],
+        pm,
         mounted() {
-          const name = prompt("WHo???")
+          const name = prompt("WHo???") ?? ""
           const update = () => (this.now = f(new Date()));
           setInterval(update, 1000);
           
