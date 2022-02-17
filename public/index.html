@@ -92,12 +92,12 @@
           <h2 class="text-xl mb-2">
             Chat
           </h2>
-          
-          <div v-for="message in messages">
+                    
+          <div v-for="m in messages">
             <strong>
-              {{ message }}
+              {{ m.person }}:
             </strong>
-            <span>{{ message.message }}</span>
+            <span>{{ m.message }}</span>
           </div>
           
           <form @submit.prevent="sendMessage" class="text-black flex justify-between">
@@ -168,8 +168,9 @@
           fetch("/name", {method: "POST", headers: {"content-type": "application/json"}, body: JSON.stringify({name, id: ID})})
         },
         
-        async getMessages() {
-          this.messages = JSON.parse(await fetch("/chat", {method: "GET"}).json())
+        getMessages() {
+          JSON.parse(await (await fetch("/chat", {method: "GET"})).json())
+          console.log(this.messages)
         },
         
         async sendMessage() {
@@ -192,7 +193,7 @@
             if (data.type === 'people')
               this.people = data.people
             else if (data.type === "chat")
-              this.messages = data.messages
+              this.messages.push({message: data.message, person: data.person})
           });
         },
         unmounted() {

@@ -70,7 +70,7 @@ app.post('/name', function(req, res) {
 
 app.get('/chat', function(req, res) {
   res.send(
-    JSON.stringify(messages.map(m => ({message: m.message, person: people[m.id]})))
+    JSON.stringify(messages.map(m => ({message: m.message, person: people[m.id] || "Guest"})))
   )
 })
 
