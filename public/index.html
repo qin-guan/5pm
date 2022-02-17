@@ -19,31 +19,28 @@
       import { formatDistance, format } from 'https://cdn.skypack.dev/date-fns';
       import { createApp } from 'https://unpkg.com/petite-vue?module';
 
-      const HOUR = 18;
+      const HOUR = 17;
 
-      const pm = new Date();
-      pm.setHours(HOUR);
+      const pm = () => {
+        const d = new Date();
+        d.setHours(HOUR);
+        return d
+      }
 
       const f = (d) => format(d, 'mm:HH:ss');
 
       createApp({
-        relative5pm: `${formatDistance(new Date(), pm)} till 5pm`,
+        relative5pm: `${formatDistance(pm(), new Date())} till 5pm`,
         is5pm: new Date().getHours() === HOUR,
         now: f(new Date()),
         mounted() {
           const update = () => (this.now = f(new Date()));
           setInterval(update, 1000);
           
-          const socket = new WebSocket(`wss://${window.location.href}/p`);
+          const source = new EventSource('/e');
 
-          // Connection opened
-          socket.addEventListener('open', function (event) {
-              socket.send('Hello Server!');
-          });
-
-          // Listen for messages
-          socket.addEventListener('message', function (event) {
-              console.log('Message from server ', event.data);
+          source.addEventListener('message', message => {
+            console.log('Got', message);
           });
         },
         unmounted() {
