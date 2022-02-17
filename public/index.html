@@ -87,36 +87,38 @@
         </span>
       </div>
       
-      <div class="absolute bottom-0 left-0 w-screen bg-slate-800 rounded-tl-lg rounded-tr-lg p-4">
-        <div v-if="chat" class="mb-4">
+      <div class="absolute bottom-0 left-0 w-screen bg-slate-800 rounded-tl-lg rounded-tr-lg overflow-hidden">
+        <div v-if="chat" class="mb-4 p-4">
           chat
         </div>
 
-        <div v-if="profile" class="mb-4">
-          <h2>
+        <div v-if="profile" class="mb-4 bg-slate-600 p-4">
+          <h2 class="text-xl mb-2">
             Profile
           </h2>
           <label>
             Name: 
-            <input v-model="name" class="text-black" />          
+            <input v-model="name" class="text-black" v-effect="update(name)" />          
           </label>
         </div>
 
-        <span>Watching together with you uwu:</span>
-        <div class="flex">
-          <div class="grid grid-cols-3 gap-3" style="flex: 1;">
-            <span v-for="person in people">
-              {{ person }}
-            </span>  
-          </div>
+        <div class="p-4">
+          <span>Watching together with you uwu:</span>
+          <div class="flex">
+            <div class="grid grid-cols-3 gap-3" style="flex: 1;">
+              <span v-for="person in people">
+                {{ person }}
+              </span>  
+            </div>
 
-          <div style="flex: 0.5;" class="flex justify-end text-black">
-            <button class="bg-slate-200 px-4 py-2 rounded-lg" @click="chat = !chat">
-              Chat
-            </button>
-            <button class="bg-slate-200 px-4 py-2 rounded-lg ml-4" @click="profile = !profile">
-              Profile
-            </button>
+            <div style="flex: 0.5;" class="flex justify-end text-black">
+              <button class="bg-slate-200 px-4 py-2 rounded-lg" @click="chat = !chat">
+                Chat
+              </button>
+              <button class="bg-slate-200 px-4 py-2 rounded-lg ml-4" @click="profile = !profile">
+                Profile
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -137,13 +139,27 @@
 
       createApp({
         now: "",
-        chat: false,
         people: [],
+        chat: false,
+        name: "Guest",
         profile: false,
         is5pm: new Date().getHours() === HOUR,
         relative5pm: formatDistanceToNow(pm()),
+        es: null,
+        
+        update(_name) {
+          this.es?.close();
+          this.es = new EventSource(`/e?name=${this.name}`);
+
+          this.es.addEventListener('message', message => {
+            console.log('Got', message);
+            const data = JSON.parse(message.data)
+            if (data.type === 'people')
+              this.people = data.people
+          });          
+        },
                 
-        async mounted() {
+        mounted() {
           const update = () => {
             this.now = format(new Date(), 'HH:mm:ss');
             this.is5pm = new Date().getHours() === HOUR
@@ -152,14 +168,7 @@
           update()
           setInterval(update, 1000);
           
-          const source = new EventSource(`/e?name=${name}`);
-
-          source.addEventListener('message', message => {
-            console.log('Got', message);
-            const data = JSON.parse(message.data)
-            if (data.type === 'people')
-              this.people = data.people
-          });
+          this.update()
         },
         unmounted() {
           clearInterval(update);
