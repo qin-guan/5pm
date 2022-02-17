@@ -1,8 +1,11 @@
 const express = require('express')
+const bodyParser = require('body-parser')
+
 const app = express()
 const port = process.env.PORT
 
 app.use(express.static('public'))
+app.use(bodyParser.json())
 
 const people = {}
 const cbs = []
@@ -46,7 +49,6 @@ app.get('/e', async function(req, res) {
 });
 
 app.post('/name', function(req, res) {
-  console.log(req)
   const {name = "Guest", id} = req.body
   if (!id || !people[id]) {
     res.end();

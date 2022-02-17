@@ -148,8 +148,8 @@
         is5pm: new Date().getHours() === HOUR,
         relative5pm: formatDistanceToNow(pm()),
         
-        nameUpdate(_name) {
-          fetch("/name", {method: "POST", body: JSON.stringify({name, id: ID})})
+        nameUpdate(name) {
+          fetch("/name", {method: "POST", headers: {"content-type": "application/json"}, body: JSON.stringify({name, id: ID})})
         },
                 
         mounted() {
