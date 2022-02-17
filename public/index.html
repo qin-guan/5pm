@@ -115,7 +115,6 @@
         is5pm: new Date().getHours() === HOUR,
         now: f(new Date()),
         people: [],
-        pm,
         mounted() {
           const name = prompt("WHo???") ?? ""
           const update = () => (this.now = f(new Date()));
