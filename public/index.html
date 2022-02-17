@@ -34,7 +34,17 @@
           const update = () => (this.now = f(new Date()));
           setInterval(update, 1000);
           
-          fetch("/p", {method: "POST"})
+          const socket = new WebSocket(`wss://${window.location.href}/p`);
+
+          // Connection opened
+          socket.addEventListener('open', function (event) {
+              socket.send('Hello Server!');
+          });
+
+          // Listen for messages
+          socket.addEventListener('message', function (event) {
+              console.log('Message from server ', event.data);
+          });
         },
         unmounted() {
           clearInterval(update);
