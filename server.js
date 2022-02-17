@@ -9,9 +9,20 @@ app.use(bodyParser.json())
 
 const people = {}
 const reslist = []
+const messages = []
 
 function event() {
-  for (const cb of cbs) cb()
+  for (const res of reslist) {
+    if (res.writableEnded) continue
+    res.write(`data: ${JSON.stringify({type: 'people', people: Object.values(people)})}\n\n`)
+  }
+}
+
+function chatEvent(message, id) {
+  for (const res of reslist) {
+    if (res.writableEnded) continue
+    res.write(`data: ${JSON.stringify({type: 'chat', message: message, person: people[id]})}\n\n`)
+  }
 }
 
 app.get('/e', async function(req, res) {
@@ -30,16 +41,13 @@ app.get('/e', async function(req, res) {
   
   if (name.length === 0) name = "Guest"
   
-  const cbsidx = cbs.length
+  const cbsidx = reslist.length
   people[id] = name
   
-  cbs.push(() => {
-    res.write(`data: ${JSON.stringify({type: 'people', people: Object.values(people)})}\n\n`)
-  })
-  
+  reslist.push(res)
+
   req.on('close', () => {
     delete people[id]
-    cbs.pop(cbsidx)
     event()
   })
 
@@ -57,6 +65,22 @@ app.post('/name', function(req, res) {
   
   people[id] = name.length === 0 ? "Guest" : name;
   event()
+  res.end()
+})
+
+app.get('/chat', function(req, res) {
+  res.send(JSON.stringify(messages))
+})
+
+app.post('/chat', function(req, res) {
+  const {message, id} = req.body
+  if (!message || !id) {
+    res.end()
+    return
+  }
+  
+  messages.push({message, id})
+  chatEvent(message, id)
 })
 
 app.listen(port, () => {

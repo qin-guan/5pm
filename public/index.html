@@ -89,7 +89,7 @@
       
       <div class="absolute bottom-0 left-0 w-screen bg-slate-800 rounded-tl-lg rounded-tr-lg overflow-hidden">
         <div v-if="chat" class="mb-4 p-4">
-          chat
+          {{ messages }}
         </div>
 
         <div v-if="profile" class="mb-4 bg-slate-600 p-4">
@@ -142,6 +142,7 @@
       createApp({
         now: "",
         people: [],
+        messages: [],
         chat: false,
         name: "Guest",
         profile: false,
@@ -151,8 +152,12 @@
         nameUpdate(name) {
           fetch("/name", {method: "POST", headers: {"content-type": "application/json"}, body: JSON.stringify({name, id: ID})})
         },
+        
+        async getMessages() {
+            this.messages = JSON.parse(await fetch("/chat", {method: "GET"}).json())
+        },
                 
-        mounted() {
+        async mounted() {
           const update = () => {
             this.now = format(new Date(), 'HH:mm:ss');
             this.is5pm = new Date().getHours() === HOUR
@@ -168,7 +173,7 @@
             const data = JSON.parse(message.data)
             if (data.type === 'people')
               this.people = data.people
-          });          
+          });
         },
         unmounted() {
           clearInterval(update);
