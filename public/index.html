@@ -33,14 +33,8 @@
         mounted() {
           const update = () => (this.now = f(new Date()));
           setInterval(update, 1000);
-
-          localConnection = new RTCPeerConnection();
-
-          sendChannel = localConnection.createDataChannel('sendChannel');
-          sendChannel.onopen = handleSendChannelStatusChange;
-          sendChannel.onclose = handleSendChannelStatusChange;
-
           
+          fetch("/p", {method: "POST"})
         },
         unmounted() {
           clearInterval(update);

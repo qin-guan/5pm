@@ -1,6 +1,6 @@
 dependencies:
   fastify: 3.27.1
-  fastify-sse: 1.0.0
+  fastify-sse-v2: 2.0.6
   fastify-static: 4.5.0
 packages:
   /@fastify/ajv-compiler/1.1.0:
@@ -54,6 +54,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
+  /base64-js/1.5.1:
+    dev: false
+    resolution:
+      integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
   /brace-expansion/1.1.11:
     dependencies:
       balanced-match: 1.0.2
@@ -61,6 +65,13 @@ packages:
     dev: false
     resolution:
       integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==
+  /buffer/5.7.1:
+    dependencies:
+      base64-js: 1.5.1
+      ieee754: 1.2.1
+    dev: false
+    resolution:
+      integrity: sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==
   /concat-map/0.0.1:
     dev: false
     resolution:
@@ -143,6 +154,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
+  /fast-fifo/1.1.0:
+    dev: false
+    resolution:
+      integrity: sha512-Kl29QoNbNvn4nhDsLYjyIAaIqaJB6rBx5p3sL9VjaefJ+eMFBWVZiaoguaoZfzEKr5RhAti0UgM8703akGPJ6g==
   /fast-json-stable-stringify/2.1.0:
     dev: false
     resolution:
@@ -164,10 +179,6 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-dir8LOnvialLxiXDPESMDHGp82CHi6ZEYTVkcvdn5d7psdv9ZkkButXrOeXST4aqreIRR+N7CYlsrwFuorurVg==
-  /fast-safe-stringify/1.2.3:
-    dev: false
-    resolution:
-      integrity: sha512-QJYT/i0QYoiZBQ71ivxdyTqkwKkQ0oxACXHYxH2zYHJEgzi2LsbjgvtzTbLi1SZcF190Db2YP7I7eTsU2egOlw==
   /fast-safe-stringify/2.1.1:
     dev: false
     resolution:
@@ -176,23 +187,25 @@ packages:
     dev: false
     resolution:
       integrity: sha512-oCfpcsDndgnDVgiI7bwFKAun2dO+4h84vBlkWsWnz/OUK9Reff5UFoFl241xTiLeHWX/vU9zkDVXqYUxjOwHcQ==
-  /fastify-plugin/1.6.1:
+  /fastify-plugin/2.0.1:
     dependencies:
-      semver: 6.3.0
+      semver: 7.3.5
     dev: false
     resolution:
-      integrity: sha512-APBcb27s+MjaBIerFirYmBLatoPCgmHZM6XP0K+nDL9k0yX8NJPWDY1RAC3bh6z+AB5ULS2j31BUfLMT3uaZ4A==
+      integrity: sha512-spYlahs74ZHR/s+cPXukJLwx0B6khgnX05i2rZW5lc9dqoMI0txrNA9mGruulkerqd4FduzkZMTQJywSwkiVOw==
   /fastify-plugin/3.0.1:
     dev: false
     resolution:
       integrity: sha512-qKcDXmuZadJqdTm6vlCqioEbyewF60b/0LOFCcYN1B6BIZGlYJumWWOYs70SFYLDAH4YqdE1cxH/RKMG7rFxgA==
-  /fastify-sse/1.0.0:
+  /fastify-sse-v2/2.0.6:
     dependencies:
-      fast-safe-stringify: 1.2.3
-      fastify-plugin: 1.6.1
+      fastify-plugin: 2.0.1
+      it-to-stream: 0.1.2
     dev: false
+    peerDependencies:
+      fastify: 3.x
     resolution:
-      integrity: sha512-y+IDCFp17DNiB1hJGjl5D714mpg1hWmROubeImw+zX8IdGJ7wW4MPJZm7zuQ7sP4CHreCCIKxH/BbP9MJ+pwzQ==
+      integrity: sha512-mdOFu+XBQmVI3jx4IjApsnHMQ40xlH2ZSpby5+IlbqDNXydHSvqUQOMS2cSnZSLmJ9SXkjfHXVdmwaBSpApTGg==
   /fastify-static/4.5.0:
     dependencies:
       content-disposition: 0.5.4
@@ -266,6 +279,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-FQStJSMVjKpA20onh8sBQRmU6k8=
+  /get-iterator/1.0.2:
+    dev: false
+    resolution:
+      integrity: sha512-v+dm9bNVfOYsY1OrhaCrmyOcYoSeVvbt+hHZ0Au+T+p1y+0Uyj9aMaGIeUTT6xdpRbWzDeYKvfOslPhggQMcsg==
   /glob/7.2.0:
     dependencies:
       fs.realpath: 1.0.0
@@ -289,6 +306,10 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha512-Kpk9Sm7NmI+RHhnj6OIWDI1d6fIoFAtFt9RLaTMRlg/8w49juAStsrBgp0Dp4OdxdVbRIeKhtCUvoi/RuAhO4g==
+  /ieee754/1.2.1:
+    dev: false
+    resolution:
+      integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
   /inflight/1.0.6:
     dependencies:
       once: 1.4.0
@@ -306,6 +327,17 @@ packages:
       node: '>= 0.10'
     resolution:
       integrity: sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==
+  /it-to-stream/0.1.2:
+    dependencies:
+      buffer: 5.7.1
+      fast-fifo: 1.1.0
+      get-iterator: 1.0.2
+      p-defer: 3.0.0
+      p-fifo: 1.0.0
+      readable-stream: 3.6.0
+    dev: false
+    resolution:
+      integrity: sha512-DTB5TJRZG3untmZehcaFN0kGWl2bNv7tnJRgQHAO9QEt8jfvVRrebZtnD5NZd4SCj4WVPjl0LSrugNWE/UaZRQ==
   /json-schema-traverse/0.4.1:
     dev: false
     resolution:
@@ -370,6 +402,19 @@ packages:
     dev: false
     resolution:
       integrity: sha1-WDsap3WWHUsROsF9nFC6753Xa9E=
+  /p-defer/3.0.0:
+    dev: false
+    engines:
+      node: '>=8'
+    resolution:
+      integrity: sha512-ugZxsxmtTln604yeYd29EGrNhazN2lywetzpKhfmQjW/VJmhpDmWbiX+h0zL8V91R0UXkhb3KtPmyq9PZw3aYw==
+  /p-fifo/1.0.0:
+    dependencies:
+      fast-fifo: 1.1.0
+      p-defer: 3.0.0
+    dev: false
+    resolution:
+      integrity: sha512-IjoCxXW48tqdtDFz6fqo5q1UfFVjjVZe8TC1QRflvNUJtNfCUhxOUw6MOVZhDPjqhSzc26xKdugsO17gmzd5+A==
   /p-limit/3.1.0:
     dependencies:
       yocto-queue: 0.1.0
@@ -485,11 +530,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-TcZvGMMy9vodEFSse30lWinkj+JgOBvPn8wRItpQRSayhc+4ssDs335uklkfvQQJgL/WvmHLVj4Ycv2s7QCQMg==
-  /semver/6.3.0:
-    dev: false
-    hasBin: true
-    resolution:
-      integrity: sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==
   /semver/7.3.5:
     dependencies:
       lru-cache: 6.0.0
@@ -591,5 +631,5 @@ shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
   fastify: ^3.27.1
-  fastify-sse: ^1.0.0
+  fastify-sse-v2: ^2.0.6
   fastify-static: ^4.5.0
