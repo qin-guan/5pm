@@ -5,16 +5,19 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
     <title>6pm</title>
   </head>
   <body>
     <style>
       body {
-        font-family: "Comis Sans MS", cursive;
+        font-family: "Comic Neue", cursive;
+        font-weight: 700;
       }
 
       h1 {
-        font-family: "Comic Sans MS", cursive;
         font-size: 100px;
         animation: rainbow-glow 5s infinite, rainbow-pastel 5s infinite;
         display: block;
@@ -95,7 +98,7 @@
         <div class="flex justify-center mt-3">
           <div
             v-for="vote in votes"
-            class="p-1 ml-3 rounded-lg bg-slate-600 grid grid-cols-2 gap-2 hover:scale-105 duration-100 cursor-pointer"
+            class="p-1 ml-3 rounded-lg bg-slate-600 grid grid-cols-2 gap-2"
           >
             <kbd> {{ vote.hour % 12 }}PM </kbd>
             <div class="bg-slate-800 rounded-lg">{{ vote.votes }}</div>
