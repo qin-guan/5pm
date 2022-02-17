@@ -88,13 +88,13 @@
       </div>
       
       <div class="fixed bottom-0 left-0 w-screen bg-slate-800 rounded-tl-lg rounded-tr-lg overflow-x-hidden">
-        <div v-if="chat" class="mb-4 p-4" @vue:mounted="getMessages">
+        <div v-if="chat" class="p-4" @vue:mounted="getMessages">
           <h2 class="text-xl mb-2">
             Chat
           </h2>
           
-          <div class="overflow-y-scroll" style="max-height: 30vh;">
-            <div v-for="m in messages" ref="chatContainer">
+          <div class="overflow-y-scroll" style="max-height: 30vh;" id="c">
+            <div v-for="m in messages">
               <strong>
                 {{ m.person }}:
               </strong>
@@ -102,7 +102,7 @@
             </div>
           </div>
           
-          <form @submit.prevent="sendMessage" class="text-black flex justify-between">
+          <form @submit.prevent="sendMessage" class="text-black flex justify-between items-center pt-3">
             <input v-model="message" />            
             <input type="submit" class="bg-indigo-200 px-4 py-2 rounded-lg" />
           </form>
@@ -173,11 +173,16 @@
         getMessages() {
           fetch("/chat", {method: "GET"}).then(v => v.json()).then(data => {
             this.messages = data
+            setTimeout(() => {
+              const objDiv = document.getElementById("c")
+              objDiv.scrollTop = objDiv.scrollHeight;
+            }, 50)
           })
         },
         
         async sendMessage() {
           fetch("/chat", {method: "POST", headers: {"content-type": "application/json"}, body: JSON.stringify({message: this.message, id: ID})})
+          this.message = ""
         },
                 
         async mounted() {
@@ -197,8 +202,11 @@
               this.people = data.people
             else if (data.type === "chat") {
               this.messages.push({message: data.message, person: data.person})
-              console.log(this.$refs)
-              this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight;
+              
+              setTimeout(() => {
+                const objDiv = document.getElementById("c")
+                objDiv.scrollTop = objDiv.scrollHeight;
+              }, 50)
             }
           });
         },
