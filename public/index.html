@@ -87,15 +87,13 @@
         </span>
       </div>
       
-      <label>
-        WHo???
-        <input v-model="name" class="m-3" />
-      </label>
-      <span class="ml-3">Watching together with you uwu:</span>
-      <div class="p-3 grid grid-cols-3">
-        <span v-for="person in people">
-          {{ person }}
-        </span>  
+      <div class="p-3">
+        <span>Watching together with you uwu:</span>
+        <div class="grid grid-cols-3">
+          <span v-for="person in people">
+            {{ person }}
+          </span>  
+        </div>
       </div>
     </div>
     
@@ -113,10 +111,11 @@
       }
 
       createApp({
-        relative5pm: formatDistanceToNow(pm()),
-        is5pm: "",
         now: "",
         people: [],
+        is5pm: new Date().getHours() === HOUR,
+        relative5pm: formatDistanceToNow(pm()),
+                
         mounted() {
           const update = () => {
             this.now = format(new Date(), 'HH:mm:ss');
