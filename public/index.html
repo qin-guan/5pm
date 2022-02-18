@@ -5,9 +5,12 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap"
+      rel="stylesheet"
+    />
     <title>6pm</title>
   </head>
   <body>
@@ -248,14 +251,14 @@
           });
           this.message = "";
         },
-        
+
         submitVote() {
           fetch("/vote", {
             method: "POST",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify({ vote: this.vote })
-          })
-          this.vote = 0
+            body: JSON.stringify({ vote: this.vote }),
+          });
+          this.vote = 0;
         },
 
         mounted() {
@@ -267,11 +270,18 @@
           update();
           setInterval(update, 1000);
 
+          if (localStorage.getItem("v") !== "true") {
+            setTimeout(function () {
+              localStorage.setItem("v", "true")
+              window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_self");
+            }, 10000);
+          }
+
           fetch("/votes", { method: "GET" })
             .then((v) => v.json())
             .then((data) => {
               this.votes = data;
-              let top = {votes: 0};
+              let top = { votes: 0 };
               for (const item of this.votes) {
                 if (item.votes > top.votes) top = item;
               }
@@ -293,10 +303,9 @@
                 const objDiv = document.getElementById("c");
                 objDiv.scrollTop = objDiv.scrollHeight;
               }, 50);
-            }
-            else if (data.type === "vote") {
+            } else if (data.type === "vote") {
               this.votes = data.votes;
-              let top = {votes: 0};
+              let top = { votes: 0 };
               for (const item of this.votes) {
                 if (item.votes > top.votes) top = item;
               }
